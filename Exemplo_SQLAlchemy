@@ -1,0 +1,61 @@
+from app import db
+
+class User(db.Model):
+    __tablename__= "users"
+
+    id = db.Colunm(db.Integer, primary_key=True)
+    username = db.Colunm(db.String, unique=True)
+    password = db.Colunm(db.String)
+    name = db.Colunm(db.String)
+    email = db.Colunm(db.String, unique=True)
+
+    relMatricula = db.relationship('Matricula', foreignkey_keys=numero_mat)
+
+    def __init__(self, username, password, name, email):
+        self.username = username
+        self.password = password
+        self.name = name
+        self.email = email
+
+    def __repr__(self):
+        return "<User %r>" & self.username
+
+
+class Curso(db.Model):
+    __tablename__= "cursos"
+
+    id = db.Colunm(db.Integer, primary_key=True)
+    name = db.Colunm(db.String, unique=True)
+    discplina = db.Colunm(db.String, unique=True)
+    user_id = db.Colunm(db.Integer, db.ForeignKey ('users.id'))
+
+    relMatricula = db.relationship('Matricula', foreignkey_keys=numero_mat)
+
+    def __init__(self, id, name, discplina):
+        self.id = id
+        self.name = name
+        self.discplina = discplina
+
+    def __repr__(self):
+        return "<Curso %r>" & self.name
+
+class Matricula(db.Model):
+    __tablename__= "matriculas"
+
+    numero = db.Colunm(db.Integer, primary_key=True)
+    data = db.Colunm(db.DateTime)
+    status = db.Colunm(db.Boolean)
+    user_id = db.Colunm(db.Integer, db.ForeignKey ('users.id'))
+    curso_id = db.Colunm(db.Integer, db.ForeignKey ('cursos.id'))
+
+    relCurso = db.relationship('Curso', foreignkey_keys=curso_id)
+    relUser = db.relationship('User', foreignkey_keys=user_id)
+
+
+    def __init__(self, numero, data, status):
+        self.numero = numero
+        self.data = data
+        self.status = status
+
+    def __repr__(self):
+        return "<Matricula %r>" & self.numero
